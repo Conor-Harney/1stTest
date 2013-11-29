@@ -1,5 +1,6 @@
 //These are global variables and are NOT recommended because they cause bad things to happen
 //Some refactoring will be needed...
+
 var canvas, ctx;
 var R = 10;
 var G = 0;
@@ -7,9 +8,10 @@ var B = 0;
 
 function Game ()
 {
-
+	this.viewportPosY = 200;
+	this.score = 0;
+	this.cameraSpeed = 0.1;
 }
-
 
 Game.prototype.initWorld = function () {
 
@@ -20,6 +22,11 @@ Game.prototype.initWorld = function () {
     canvas.addEventListener("mousedown", doMouseDown, false);
     this.gameWon = false;
     this.gameOver = false;
+    this.b_gameOver = false;
+	this.healthPack1 = new healthPickUp(200, 200);
+	playBackgroundLoop();
+
+	this.gameLoop();
 }
 
 function doMouseDown(event) {
@@ -110,48 +117,54 @@ Game.prototype.update = function () {
             //Any idea what save and restore do?
             ctx.restore();
         }
+
+        this.cameraSpeed += 0.01;
+        var healthAdder = this.healthPack1.checkCollision(this.player.x, this.player.y, this.player.width, this.player.height);
+        if (healthAdder != false) { this.player.increaseLives(); }
+        this.viewportPosY = this.viewportPosY - this.cameraSpeed;
+        this.healthPack1.update(0, this.viewportPosY);
+        healthAdder = false;
     }
-}
 
-/**
- *  @param e game entity
- */
-Game.prototype.collisionResponse = function () {
-    this.gameWon = true;
-    ctx.save();
-    //add in your own colour
-    ctx.fillStyle = '#00f';
-    ctx.font = 'italic 30px sans-serif';
-    ctx.textBaseline = 'top';
-    ctx.fillText('You win!!!!!!!!!!!!!!!!!!', 300, 100);
-    //Any idea what save and restore do?
-    ctx.restore();
-}
-
+    Game.prototype.collisionResponse = function () {
+        this.gameWon = true;
+        ctx.save();
+        //add in your own colour
+        ctx.fillStyle = '#00f';
+        ctx.font = 'italic 30px sans-serif';
+        ctx.textBaseline = 'top';
+        ctx.fillText('You win!!!!!!!!!!!!!!!!!!', 300, 100);
+        //Any idea what save and restore do?
+        ctx.restore();
+    }
 
 
 Game.prototype.gameLoop = function () {
 
-    //
-        game.update();
-    //}
+        //
+    game.update();
+        //}
     game.draw();
 
     window.requestAnimFrame(game.gameLoop);
 }
 
-Game.prototype.draw = function (ctx) {
-    //sample 
-    //ctx.fillStyle = rgb(255, 0, 0);
-    //ctx.fillRect(100, 100, 50, 50);
-    this.goal.draw();
+    Game.prototype.draw = function (ctx) {
+        //sample 
+        //ctx.fillStyle = rgb(255, 0, 0);
+        //ctx.fillRect(100, 100, 50, 50);
+        this.goal.draw();
 
-    if (this.player.isAlive == true) {
-        this.player.draw();
+        if (this.player.isAlive == true) {
+            this.player.draw();
+        }
+
+        if (this.e.isAlive == true) {
+            this.e.draw();
+        }
+
+        this.healthPack1.draw();
     }
 
-    if (this.e.isAlive == true) {
-        this.e.draw();
-    }
+
 }
-

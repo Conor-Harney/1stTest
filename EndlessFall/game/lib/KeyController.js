@@ -40,8 +40,7 @@ KeyController = new (function(){
 				if(e.keyCode == keyUpListeners[i].key ) keyUpListeners[i].func();  
 
 			}
-		
-		
+
 		}); 
 		
 	this.addKeyDownListener = function(key, func) { 

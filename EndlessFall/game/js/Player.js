@@ -7,12 +7,6 @@ var Player = function (x, y, w, h) {
     this.lives = 3;
 };
 
-
-
-
-
-
-
 Player.prototype.draw = function () {
 
     ctx.save();
@@ -44,6 +38,10 @@ Player.prototype.checkCollision = function (e) {
     return collides;
 };
 
+Player.prototype.increaseLives = function () {
+    this.lives++;
+}
+
 Player.prototype.decreaseLife = function () {
     if (this.lives > 0) {
         this.lives--;
@@ -67,6 +65,13 @@ Player.prototype.update = function () {
     
 }
 
+
+Player.prototype.draw = function()
+{
+    ctx.fillStyle = rgb(255, 0, 0);
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+
+};
 
 Player.prototype.clear = function()
 {
@@ -103,3 +108,4 @@ Player.prototype.moveDown = function () {
     this.y += 5;
 
 }
+
