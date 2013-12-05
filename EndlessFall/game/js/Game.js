@@ -1,4 +1,4 @@
-var player, b_gameOver, healthPack1, viewportPosY, cameraSpeed;
+var player, b_gameOver, healthPack1, scorePack1, viewportPosY, cameraSpeed;
 //These are global variables and are NOT recommended because they cause bad things to happen
 //Some refactoring will be needed...
 
@@ -25,6 +25,7 @@ Game.prototype.initWorld = function () {
     this.gameOver = false;
     this.b_gameOver = false;
 	this.healthPack1 = new healthPickUp(200, 200);
+    this.scorePack1 = new scorePickUp(50, 300);
 	playBackgroundLoop();
 
 	//gameLoop();
@@ -77,11 +78,7 @@ function loopPlay() {
 
 Game.prototype.update = function () {
 
-    //loopPlay();
-    //play();
-    console.log("in update");
     if (this.gameWon == false && this.gameOver == false) {
-        console.log("in update");
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         if (this.e.getAlive() == true && this.player.isAlive == true) {
             this.e.move(this.player, 1);
@@ -121,12 +118,20 @@ Game.prototype.update = function () {
             ctx.restore();
         }
 
-        this.cameraSpeed += 0.01;
+        if(this.cameraSpeed < 2){
+            this.cameraSpeed += 0.001;
+        }
         var healthAdder = this.healthPack1.checkCollision(this.player.x, this.player.y, this.player.width, this.player.height);
         if (healthAdder != false) { this.player.increaseLives(); }
         this.viewportPosY = this.viewportPosY - this.cameraSpeed;
         this.healthPack1.update(0, this.viewportPosY);
         healthAdder = false;
+
+         var scoreAdder = this.scorePack1.checkCollision(this.player.x, this.player.y, this.player.width, this.player.height);
+        if (scoreAdder != false) { this.player.increaseScore(); }
+        this.viewportPosY = this.viewportPosY - this.cameraSpeed;
+        this.scorePack1.update(0, this.viewportPosY);
+        scoreAdder = false;
     }
 }
 
@@ -161,4 +166,5 @@ Game.prototype.draw = function (ctx) {
     }
 
     this.healthPack1.draw();
+    this.scorePack1.draw();
 }

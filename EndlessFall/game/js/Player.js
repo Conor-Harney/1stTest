@@ -5,6 +5,7 @@ var Player = function (x, y, w, h) {
     this.height = h;
     this.isAlive = true;
     this.lives = 3;
+    this.score = 0;
 };
 
 Player.prototype.draw = function () {
@@ -40,6 +41,10 @@ Player.prototype.checkCollision = function (e) {
 
 Player.prototype.increaseLives = function () {
     this.lives++;
+}
+
+Player.prototype.increaseScore = function () {
+    this.score++;
 }
 
 Player.prototype.decreaseLife = function () {

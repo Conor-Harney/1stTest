@@ -2,9 +2,9 @@ var AM;
 var game;
 function main()
 {
-	//change version number if you suspect a problem with caching
 	AM = new AssetManager;
 	AM.queueDownload("images/healthPack.gif");
+	AM.queueDownload("images/scorePack.png");
 	AM.downloadAll(setup);
 	
 	
@@ -16,14 +16,9 @@ function setup() {
 	this.game= new Game();
 
 	this.game.initCanvas();
-	//ctx the drawing context, which lets you draw onto the canvas
-	//Most people call it ctx for short	
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	
 
 	this.game.initWorld();	
 	this.game.gameLoop();	
-		
-	//start game loop
-
 }
