@@ -21,7 +21,8 @@ function setup() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	
 
-	this.game.initWorld();		
+	this.game.initWorld();	
+	this.game.gameLoop();	
 		
 	//start game loop
 

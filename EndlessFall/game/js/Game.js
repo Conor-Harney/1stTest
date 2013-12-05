@@ -1,3 +1,4 @@
+var player, b_gameOver, healthPack1, viewportPosY, cameraSpeed;
 //These are global variables and are NOT recommended because they cause bad things to happen
 //Some refactoring will be needed...
 
@@ -16,8 +17,8 @@ function Game ()
 Game.prototype.initWorld = function () {
 
 
-    this.player = new Player(200, 250, 50, 40);
-    this.goal = new Goal(250, 2000, 50, 40);
+    this.player = new Player(100, 100, 50, 40);
+    this.goal = new Goal(0, 8000, 50, 40);
     this.e = new Enemy(300, 100, 50, 40);
     canvas.addEventListener("mousedown", doMouseDown, false);
     this.gameWon = false;
@@ -26,7 +27,8 @@ Game.prototype.initWorld = function () {
 	this.healthPack1 = new healthPickUp(200, 200);
 	playBackgroundLoop();
 
-	this.gameLoop();
+	//gameLoop();
+     //window.requestAnimFrame(game.gameLoop);
 }
 
 function doMouseDown(event) {
@@ -77,8 +79,9 @@ Game.prototype.update = function () {
 
     //loopPlay();
     //play();
-
+    console.log("in update");
     if (this.gameWon == false && this.gameOver == false) {
+        console.log("in update");
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         if (this.e.getAlive() == true && this.player.isAlive == true) {
             this.e.move(this.player, 1);
@@ -125,46 +128,37 @@ Game.prototype.update = function () {
         this.healthPack1.update(0, this.viewportPosY);
         healthAdder = false;
     }
+}
 
-    Game.prototype.collisionResponse = function () {
-        this.gameWon = true;
-        ctx.save();
-        //add in your own colour
-        ctx.fillStyle = '#00f';
-        ctx.font = 'italic 30px sans-serif';
-        ctx.textBaseline = 'top';
-        ctx.fillText('You win!!!!!!!!!!!!!!!!!!', 300, 100);
-        //Any idea what save and restore do?
-        ctx.restore();
-    }
+Game.prototype.collisionResponse = function () {
+    this.gameWon = true;
+    ctx.save();
+    //add in your own colour
+    ctx.fillStyle = '#00f';
+    ctx.font = 'italic 30px sans-serif';
+    ctx.textBaseline = 'top';
+    ctx.fillText('You win!!!!!!!!!!!!!!!!!!', 300, 100);
+    //Any idea what save and restore do?
+    ctx.restore();
+}
 
 
 Game.prototype.gameLoop = function () {
-
-        //
     game.update();
-        //}
     game.draw();
 
     window.requestAnimFrame(game.gameLoop);
 }
 
-    Game.prototype.draw = function (ctx) {
-        //sample 
-        //ctx.fillStyle = rgb(255, 0, 0);
-        //ctx.fillRect(100, 100, 50, 50);
-        this.goal.draw();
-
-        if (this.player.isAlive == true) {
-            this.player.draw();
-        }
-
-        if (this.e.isAlive == true) {
-            this.e.draw();
-        }
-
-        this.healthPack1.draw();
+Game.prototype.draw = function (ctx) {
+    this.goal.draw();
+    if (this.player.isAlive == true) {
+        this.player.draw();
     }
 
+    if (this.e.isAlive == true) {
+        this.e.draw();
+    }
 
+    this.healthPack1.draw();
 }
