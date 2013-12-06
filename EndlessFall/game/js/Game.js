@@ -63,8 +63,8 @@ Game.prototype.initCanvas=function () {
 
 	document.body.appendChild(canvas);
 	//set canvas to size of the screen.
-	canvas.width = window.innerWidth; 
-	canvas.height = window.innerHeight;
+	canvas.width = window.innerWidth - 20; 
+	canvas.height = window.innerHeight - 20;
 }
 
 function play() {
@@ -87,63 +87,72 @@ function loopPlay() {
 }
 
 Game.prototype.update = function () {
-
-    if (this.gameWon == false && this.gameOver == false) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        if (this.e.getAlive() == true && this.player.isAlive == true) {
-            this.e.move(this.player, 1);
-
-            this.e.update();
-            this.e.checkGoal(this.goal);
-        }
-        this.goal.move(1);
-
-
-        if (this.player.checkCollision(this.goal) == true) {
-
-            this.collisionResponse();
-
-        }
-
-        if (this.player.checkCollision(this.e) == true && this.e.isAlive == true) {
-            this.e.dead();
-            this.player.decreaseLife();
-        }
-
-        if (this.player.isAlive == true) {
-
-            this.player.update();
-
-        }
-
+    if(this.menu.isAlive == true)
+    {
         this.menu.checkCollision(mousePosx,mousePosy);
-        if (this.player.lives == 0) {
-            this.player.isAlive = false;
-            this.gameOver = true;
-            ctx.save();
-            //add in your own colour
-            ctx.fillStyle = '#00f';
-            ctx.font = 'italic 30px sans-serif';
-            ctx.textBaseline = 'top';
-            ctx.fillText('Game Over you failed to fall', 200, 100);
-            //Any idea what save and restore do?
-            ctx.restore();
-        }
+    }
+    else
+    {
+        if (this.gameWon == false && this.gameOver == false) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = rgb(0, 127, 127);
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            if (this.e.getAlive() == true && this.player.isAlive == true) {
+                this.e.move(this.player, 1);
 
-        if (this.cameraSpeed < 2) {
-            this.cameraSpeed += 0.001;
-        }
-        var healthAdder = this.healthPack1.checkCollision(this.player.x, this.player.y, this.player.width, this.player.height);
-        if (healthAdder != false) { this.player.increaseLives(); }
-        this.viewportPosY = this.viewportPosY - this.cameraSpeed;
-        this.healthPack1.update(0, this.viewportPosY);
-        healthAdder = false;
+                this.e.update();
+                this.e.checkGoal(this.goal);
+            }
+            this.goal.move(1);
 
-        var scoreAdder = this.scorePack1.checkCollision(this.player.x, this.player.y, this.player.width, this.player.height);
-        if (scoreAdder != false) { this.player.increaseScore(); }
-        this.viewportPosY = this.viewportPosY - this.cameraSpeed;
-        this.scorePack1.update(0, this.viewportPosY);
-        scoreAdder = false;
+
+            if (this.player.checkCollision(this.goal) == true) {
+
+                this.collisionResponse();
+
+            }
+
+            if (this.player.checkCollision(this.e) == true && this.e.isAlive == true) {
+                this.e.dead();
+                this.player.decreaseLife();
+            }
+
+            if (this.player.isAlive == true) {
+
+                this.player.update();
+
+            }
+
+            
+            if (this.player.lives == 0) {
+                this.player.isAlive = false;
+                this.gameOver = true;
+                ctx.save();
+                //add in your own colour
+                ctx.fillStyle = '#00f';
+                ctx.font = 'italic 30px sans-serif';
+                ctx.textBaseline = 'top';
+                ctx.fillText('Game Over you failed to fall', 200, 100);
+                //Any idea what save and restore do?
+                ctx.restore();
+            }
+
+            if (this.cameraSpeed < 2) {
+                this.cameraSpeed += 0.001;
+            }
+            var healthAdder = this.healthPack1.checkCollision(this.player.x, this.player.y, this.player.width, this.player.height);
+            if (healthAdder != false) { this.player.increaseLives(); }
+            this.viewportPosY = this.viewportPosY - this.cameraSpeed;
+            this.healthPack1.update(0, this.viewportPosY);
+            healthAdder = false;
+
+            var scoreAdder = this.scorePack1.checkCollision(this.player.x, this.player.y, this.player.width, this.player.height);
+            if (scoreAdder != false) { this.player.increaseScore(); }
+            this.viewportPosY = this.viewportPosY - this.cameraSpeed;
+            this.scorePack1.update(0, this.viewportPosY);
+            scoreAdder = false;
+
+        }
     }
 }
 

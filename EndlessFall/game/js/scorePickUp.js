@@ -15,11 +15,7 @@ scorePickUp.prototype.update = function(screenPosX, screenPosY){
 		this.relScreenPosY = this.worldPosY + screenPosY;
 		this.screenPositionY = screenPosX;
 	}
-	if (this.relScreenPosY < 0)
-	{this.destroy();
-	 console.log("hit desMeth");
-	// console.log(this);
-	}
+	if (this.relScreenPosY < 0){this.destroy();}
 };
 
 scorePickUp.prototype.getPosition = function(){
@@ -29,10 +25,7 @@ scorePickUp.prototype.getPosition = function(){
 };
 
 scorePickUp.prototype.destroy = function(){
-	//this.alive = false;
 	this.worldPosY = this.worldPosY + 800;
-	//this.relScreenPosY = 800;
-	//this.alive = true;
 };
 
 scorePickUp.prototype.checkCollision = function(playersPositionX, playersPositionY, playerSizeX, playerSizeY){

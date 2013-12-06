@@ -13,6 +13,7 @@ healthPickUp.prototype.update = function(screenPosX, screenPosY){
 		this.relScreenPosX = this.worldPosX + screenPosX;
 		this.relScreenPosY = this.worldPosY + screenPosY;
 	}
+	if (this.relScreenPosY < 0){this.destroy();}
 };
 
 healthPickUp.prototype.getPosition = function(){
@@ -22,7 +23,7 @@ healthPickUp.prototype.getPosition = function(){
 };
 
 healthPickUp.prototype.destroy = function(){
-	this.alive = false;
+	this.worldPosY = this.worldPosY + 800;
 };
 
 healthPickUp.prototype.checkCollision = function(playersPositionX, playersPositionY, playerSizeX, playerSizeY){
@@ -44,17 +45,7 @@ healthPickUp.prototype.draw = function()
 {
 	if(this.alive == true)
 	{
-		//ctx.fillStyle = rgb(255, 0, 0);
-		//ctx.fillRect(this.relScreenPosX, this.relScreenPosY, this.size, this.size);
-		//-
-
-		var img2 = AM.cache["images/healthPack.gif"];
-		//img2.addEventListener('load', function () {
-		//	var x2 = 0, y2 = 200;
-			ctx.drawImage(img2, this.relScreenPosX, this.relScreenPosY, this.size, this.size);
-		//}, false);
-
-		
-		
+		var img = AM.cache["images/healthPack.png"];
+			ctx.drawImage(img, this.relScreenPosX, this.relScreenPosY, this.size, this.size);
 	}
 };

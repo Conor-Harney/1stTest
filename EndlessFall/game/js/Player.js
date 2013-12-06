@@ -13,9 +13,10 @@ Player.prototype.draw = function () {
     ctx.save();
     //add in your own colour
     ctx.fillStyle = '#00f';
-    ctx.font = 'italic 30px sans-serif';
+    ctx.font = 'italic 20px sans-serif';
     ctx.textBaseline = 'top';
-    ctx.fillText('Lives: ' + this.lives, 100, 100);
+    ctx.fillText('Lives: ' + this.lives, 0, 0);
+    ctx.fillText('score: ' + (this.score * 100), 100, 0);
     //Any idea what save and restore do?
     ctx.restore();
     ctx.fillStyle = rgb(0, 255, 0);
@@ -71,12 +72,7 @@ Player.prototype.update = function () {
 }
 
 
-Player.prototype.draw = function()
-{
-    ctx.fillStyle = rgb(255, 0, 0);
-    ctx.fillRect(this.x, this.y, this.width, this.height);
 
-};
 
 Player.prototype.clear = function()
 {
