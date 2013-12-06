@@ -3,7 +3,7 @@ var game;
 function main()
 {
 	AM = new AssetManager;
-	AM.queueDownload("images/healthPack.gif");
+	AM.queueDownload("images/healthPack.png");
 	AM.queueDownload("images/scorePack.png");
 	AM.downloadAll(setup);
 	

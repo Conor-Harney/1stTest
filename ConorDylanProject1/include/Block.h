@@ -11,9 +11,9 @@
 class Block{
 
 public:
-	enum Block_Type{ null, streightRaill};
+	enum Block_Type{ null, streightRaill, curvedRail, gradientRail};
 	static const int size = 50;
-	Block(Ogre::Vector3 blockVecIn, Ogre::Vector3 posIn);
+	Block(Ogre::Vector3 blockVecIn, Ogre::Vector3 posIn, Ogre::Vector3 directionIn);
 	void initilise(Ogre::SceneManager *sceneMan, Block::Block_Type typeOfBlock);
 	double getSpeedMod();
 	Ogre::Vector3 getDirection();

@@ -2,6 +2,8 @@
 #define PLAYER_H
 #include <Ogre.h>
 #include "Block.h"
+#include <string.h>
+#include <string>
 #include <vector>
 #include <OgreCamera.h>
 #include <OgreEntity.h>
@@ -35,9 +37,13 @@ public:
 	Ogre::Degree roll;//the players tilt
 	void update();
 	Ogre::Vector3 getBlock();//check which block the player is currently inside of. the one below decides direction and speed incriment, the one in front may be an obstacle
-	void setJump();
+	void setJump(std::string jumpingTo);//STREIGHT_UP, LEFT_RAIL, RIGHT_RAIL
 	vector<Block> & r_Map;
 	Ogre::Vector3 overBlock();
+	void setLean(std::string direction);
+	void stopLean();
+	Ogre::Quaternion getOrientation();
+	bool jumping;//if this is true, the player is in the middle of a jump;
 
 
 private:
@@ -48,10 +54,14 @@ private:
 	Ogre::Entity * mEntity;
 	Ogre::SceneNode *mNode;
 	Ogre::SceneManager *mSceneMgr;
+	Ogre::Radian m_Angle;
+	std::string jumpingToRail;
 	
 	int vect32BlockID(Ogre::Vector3);
 
-	bool jumping;//if this is true, the player is in the middle of a jump;
+	
 	float jumpforce;
+	float horozontalJumpPerFrame;
+	void lean();
 };
 #endif

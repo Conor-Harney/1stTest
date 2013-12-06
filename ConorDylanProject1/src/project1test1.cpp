@@ -35,11 +35,13 @@ void project1test1::createScene(void)
 	tempCounter = 0;
 	mBlockVector.reserve(1000);
 	float blockSize = 50;
+	Ogre::Vector3 blockDirection = Ogre::Vector3(0,0,1);
 	for(int ix = 0; ix < 10; ix++)	{
 		for(int iy = 0; iy < 10; iy++)	{
 			for(int iz = 0; iz < 10; iz++){
-
-				mBlockVector.push_back( Block(Ogre::Vector3(ix, iy, iz), Ogre::Vector3((ix * blockSize) + (blockSize / 2), (iy * blockSize) + (blockSize / 2), (iz * blockSize) + (blockSize / 2))));
+				if(iz == 9)
+				{blockDirection = Ogre::Vector3(0,0,1);}
+				mBlockVector.push_back( Block(Ogre::Vector3(ix, iy, iz), Ogre::Vector3((ix * blockSize) + (blockSize / 2), (iy * blockSize) + (blockSize / 2), (iz * blockSize) + (blockSize / 2)), blockDirection ));
 					Block::Block_Type BT1 = Block::Block_Type::null;
 					if(iy == 0){BT1 = Block::Block_Type::streightRaill;}
 					else{
@@ -70,20 +72,55 @@ void project1test1::createScene(void)
 
 	mObstacle = new Obstacle(obstacleNode, Ogre::Vector3(0,100,500), 100, 100, 100);
 
-	result = FModManager::System()->createSound("C://Program Files (x86)//FMOD SoundSystem//FMOD Programmers API Windows//examples//media//Jump.mp3", FMOD_3D, 0, &sound);
+
+
+
+
+	//setup FMOD
+
+
+	result = FMOD::System_Create(&FMODsys);     // Create the main system object.
+	if (result != FMOD_OK)
+	{
+		std::cout << "FMOD error! (%d) %s\n" <<result;// << FMOD_ErrorString(result);
+		exit(-1);
+	}
+ 
+	result = FMODsys->init(100, FMOD_INIT_NORMAL, 0);   // Initialize FMOD.
+     
+	if (result != FMOD_OK)
+	{
+		std::cout << "FMOD error! (%d) %s\n" << result;// << FMOD_ErrorString(result);
+		exit(-1);
+	}
+
+
+
+
+	result = FMODsys->createSound("C://Program Files (x86)//FMOD SoundSystem//FMOD Programmers API Windows//examples//media//Jump.mp3", FMOD_3D, 0, &sound);
 	//result = FModManager::System()->createSound("C:\Users\Conor Harney\Desktop\Year 3\project 1\project 1 - test 1\sounds\Jump.mp3", FMOD_3D, 0, &sound);
 	///////////////////////////////////////////////////////////////////////////////////////
 }
 
 bool project1test1::keyPressed( const OIS::KeyEvent &arg ){
+	
 	if (arg.key == OIS::KC_SPACE)   // toggle visibility of advanced frame stats
     {
-		tempCounter++;
-		player1->setJump();
-		FModManager::System()->playSound(FMOD_CHANNEL_FREE, sound, false, &channel);
+		if (player1->jumping == false){
+			playerJumpState = "STREIGHT_UP";
+			if (arg.key == OIS::KC_LEFT){playerJumpState = "LEFT_RAIL";}
+			else if (arg.key == OIS::KC_RIGHT){playerJumpState = "RIGHT_RAIL";}
+			tempCounter++;
+			player1->setJump(playerJumpState);
+			FModManager::System()->playSound(FMOD_CHANNEL_FREE, sound, false, &channel);
+		}
 
     }
-	else if (arg.key == OIS::KC_ESCAPE)
+	if (arg.key == OIS::KC_Q)
+    {
+		player1->setLean(std::string("->"));
+	}
+	if (arg.key == OIS::KC_ESCAPE)
     {
         mShutDown = true;
     }
@@ -182,6 +219,15 @@ bool project1test1::keyPressed( const OIS::KeyEvent &arg ){
 	return true;
 }
 
+bool project1test1::keyReleased( const OIS::KeyEvent &arg )
+{
+    mCameraMan->injectKeyUp(arg);
+	if(arg.key == OIS::KC_Q){
+		player1->stopLean();
+	}
+    return true;
+}
+
 bool project1test1::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
     if(mWindow->isClosed())
@@ -217,12 +263,15 @@ bool project1test1::frameRenderingQueued(const Ogre::FrameEvent& evt)
 			mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(player1->pos.x));
             mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(player1->pos.y));
             mDetailsPanel->setParamValue(2, Ogre::StringConverter::toString(player1->pos.z));
-			mDetailsPanel->setParamValue(4, Ogre::StringConverter::toString(ovBY));
+			mDetailsPanel->setParamValue(4, Ogre::StringConverter::toString(player1->getOrientation().z));
             mDetailsPanel->setParamValue(5, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().x));
             mDetailsPanel->setParamValue(6, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().y));
             mDetailsPanel->setParamValue(7, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().z));
         }
     }
+
+	FModManager::System()->update();
+
     return true;
 }
 
