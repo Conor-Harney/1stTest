@@ -1,4 +1,4 @@
-var player, b_gameOver, healthPack1, scorePack1, viewportPosY, cameraSpeed;
+var player, b_gameOver, healthPack1, scorePack1, viewportPosY, cameraSpeed,menu;
 //These are global variables and are NOT recommended because they cause bad things to happen
 //Some refactoring will be needed...
 
@@ -6,12 +6,16 @@ var canvas, ctx;
 var R = 10;
 var G = 0;
 var B = 0;
+var mousePosx;
+var mousePosy;
 
 function Game ()
 {
 	this.viewportPosY = 200;
 	this.score = 0;
 	this.cameraSpeed = 0.1;
+    mousePosx = 4;
+    mousePosy = 4;
 }
 
 Game.prototype.initWorld = function () {
@@ -20,21 +24,25 @@ Game.prototype.initWorld = function () {
     this.player = new Player(100, 100, 50, 40);
     this.goal = new Goal(0, 8000, 50, 40);
     this.e = new Enemy(300, 100, 50, 40);
+    this.menu = new Menu(0, 0, canvas.width, canvas.height);
     canvas.addEventListener("mousedown", doMouseDown, false);
+    
     this.gameWon = false;
     this.gameOver = false;
     this.b_gameOver = false;
-	this.healthPack1 = new healthPickUp(200, 200);
+    this.healthPack1 = new healthPickUp(200, 200);
     this.scorePack1 = new scorePickUp(50, 300);
-	playBackgroundLoop();
+    playBackgroundLoop();
 
-	//gameLoop();
-     //window.requestAnimFrame(game.gameLoop);
+    //gameLoop();
+    //window.requestAnimFrame(game.gameLoop);
 }
 
 function doMouseDown(event) {
 
     if (event.which === 1) {
+        mousePosx = event.clientX;
+        mousePosy = event.clientY;
         play();
     }
     if (event.which === 2) {
@@ -43,8 +51,10 @@ function doMouseDown(event) {
     if (event.which === 3) {
         play();
     }
-
+   
 }
+
+
 
 Game.prototype.initCanvas=function () { 
 
@@ -105,6 +115,8 @@ Game.prototype.update = function () {
             this.player.update();
 
         }
+
+        this.menu.checkCollision(mousePosx,mousePosy);
         if (this.player.lives == 0) {
             this.player.isAlive = false;
             this.gameOver = true;
@@ -118,7 +130,7 @@ Game.prototype.update = function () {
             ctx.restore();
         }
 
-        if(this.cameraSpeed < 2){
+        if (this.cameraSpeed < 2) {
             this.cameraSpeed += 0.001;
         }
         var healthAdder = this.healthPack1.checkCollision(this.player.x, this.player.y, this.player.width, this.player.height);
@@ -127,7 +139,7 @@ Game.prototype.update = function () {
         this.healthPack1.update(0, this.viewportPosY);
         healthAdder = false;
 
-         var scoreAdder = this.scorePack1.checkCollision(this.player.x, this.player.y, this.player.width, this.player.height);
+        var scoreAdder = this.scorePack1.checkCollision(this.player.x, this.player.y, this.player.width, this.player.height);
         if (scoreAdder != false) { this.player.increaseScore(); }
         this.viewportPosY = this.viewportPosY - this.cameraSpeed;
         this.scorePack1.update(0, this.viewportPosY);
@@ -167,4 +179,7 @@ Game.prototype.draw = function (ctx) {
 
     this.healthPack1.draw();
     this.scorePack1.draw();
+    this.menu.draw();
+
+    
 }
