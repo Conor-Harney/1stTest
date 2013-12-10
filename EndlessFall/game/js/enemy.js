@@ -12,7 +12,7 @@
 Enemy.prototype.dead = function () {
 
     this.y = 900;
-
+    this.x = (Math.random() * 100000) % 1200;
 };
 
 Enemy.prototype.draw = function () {

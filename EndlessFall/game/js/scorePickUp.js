@@ -1,5 +1,6 @@
 var scorePickUp = function(posXIn, posYIn){
-	this.worldPosX = posXIn;
+
+    this.worldPosX = (Math.random() * 100000) % 1100;
 	this.worldPosY = posYIn;//the position in the world
 	this.relScreenPosX = this.worldPosX;
 	this.relScreenPosY =  this.worldPosY;
@@ -24,8 +25,9 @@ scorePickUp.prototype.getPosition = function(){
 	}
 };
 
-scorePickUp.prototype.destroy = function(){
-	this.worldPosY = this.worldPosY + 800;
+scorePickUp.prototype.destroy = function () {
+    this.worldPosY = this.worldPosY + 800;
+    this.worldPosX = (Math.random() * 100000) % 1100;
 };
 
 scorePickUp.prototype.checkCollision = function(playersPositionX, playersPositionY, playerSizeX, playerSizeY){
