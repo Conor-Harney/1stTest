@@ -43,3 +43,7 @@ void Obstacle::Draw()
 {
 
 }
+
+Ogre::Vector3 Obstacle::getPosition(){
+	return m_pos;
+}

@@ -1,6 +1,6 @@
 #include "Block.h"
 
-Block::Block(Ogre::Vector3 blockVecIn, Ogre::Vector3 posIn, Ogre::Vector3 directionIn):blockVec(blockVecIn), pos(posIn), mSpeedMod(0), mDirection(directionIn){}
+Block::Block(Ogre::Vector3 blockVecIn, Ogre::Vector3 posIn, Ogre::Vector3 directionIn):blockVec(blockVecIn), pos(posIn), mSpeedMod(0.0001), mDirection(directionIn){}
 
 void Block::initilise(Ogre::SceneManager *sceneMan, Block::Block_Type typeOfBlock){
 	blockType = typeOfBlock;
@@ -29,18 +29,23 @@ void Block::initilise(Ogre::SceneManager *sceneMan, Block::Block_Type typeOfBloc
 	}
 	mNode->setPosition(pos);
 	//mNode->scale(0.5f, 0.5f, 0.5f);
+	
 	mNode->scale(25.0f, 75.0f, 25.0f);
-	mNode->yaw(Ogre::Radian(Ogre::Math::HALF_PI), mNode->TS_LOCAL);
+	if(blockType == Block_Type::streightRaill){
+		mNode->yaw(Ogre::Radian(Ogre::Math::HALF_PI), mNode->TS_LOCAL);
 
-	///////////////////////////////
-	int i = (blockVec.x + blockVec.y + blockVec.z);
-	if (i % 2 == 0){
-		//mNode->pitch(Ogre::Radian(0.5));
+		///////////////////////////////
+		int i = (blockVec.x + blockVec.y + blockVec.z);
+		if (i % 2 == 0){
+			//mNode->pitch(Ogre::Radian(0.5));
+		}
+		/////////////////////////////
+
+		mNode->yaw(Ogre::Radian(Ogre::Math::HALF_PI * mDirection.x), mNode->TS_LOCAL);
 	}
-	/////////////////////////////
-
-	if(blockVec.z == 9)
-	{mDirection = Ogre::Vector3(1,0,0); mNode->yaw(Ogre::Radian(Ogre::Math::HALF_PI), mNode->TS_LOCAL);}
+	else if(blockType == Block_Type::curvedRail){
+		mNode->yaw(Ogre::Radian(Ogre::Math::HALF_PI * 3), mNode->TS_LOCAL);
+	}
 	
 }
 
@@ -49,9 +54,27 @@ double Block::getSpeedMod(){
 }
 
 Ogre::Vector3 Block::getDirection(){
-	return mDirection;
+	if(blockType != Block_Type::null){
+		return mDirection;
+	}
+	else{
+		return Ogre::Vector3(0,-1,0);
+	}
 }
 
 float Block::getTop(){
 	return pos.y + (size / 2);
+}
+
+void Block::setObjectToCenter(Ogre::Vector3 * objPosPtr){
+	if (blockType == Block_Type::streightRaill)
+	{
+		if(mDirection == Ogre::Vector3(1,0,0) || mDirection == Ogre::Vector3(-1,0,0)){
+			objPosPtr->z = pos.z + (size / 2);
+		}
+		else if(mDirection == Ogre::Vector3(0,0,1) || mDirection == Ogre::Vector3(0,0,-1)){
+			Ogre::Real xpos = pos.x + (size / 2);
+			objPosPtr->x = pos.x + (size / 2);
+		}
+	}
 }

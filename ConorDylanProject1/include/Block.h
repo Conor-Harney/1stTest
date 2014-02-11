@@ -20,6 +20,7 @@ public:
 	std::string blockName;
 	float getTop();
 	Block_Type blockType;
+	void setObjectToCenter(Ogre::Vector3 * objPosPtr);
 
 protected:
 	

@@ -12,7 +12,7 @@ public:
 
 	Ogre::Vector3 ReturnPos();
 	bool IsHit(Ogre::Vector3 playerPos, float playerWidth, float playerHeight, float playerDepth);
-
+	Ogre::Vector3 getPosition();
 	void Draw();
 
 private:
